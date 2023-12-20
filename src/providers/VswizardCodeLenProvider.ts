@@ -116,8 +116,21 @@ export class VswizardCodeLensProvider implements CodeLensProvider {
         document: TextDocument,
         symbol: any
     ): void {
+        console.log(symbol);
         // Check if the symbol is a function and add DocstringCodeLens
         if (symbol.kind === SymbolKind.Function) {
+            // console.log(`  Function found: ${JSON.stringify(symbol, null, 2)} | symbol.selectionrange: ${symbol.selectionrange} | symbol.selection_range: ${symbol.selection_range}`);
+            lenses.push(new DocstringCodeLens(symbol.range, symbol.location.range));
+        }
+
+        // Check if the symbol is a class and add DocstringCodeLens
+        if (symbol.kind === SymbolKind.Class) {
+            // console.log(`  Function found: ${JSON.stringify(symbol, null, 2)} | symbol.selectionrange: ${symbol.selectionrange} | symbol.selection_range: ${symbol.selection_range}`);
+            lenses.push(new DocstringCodeLens(symbol.range, symbol.location.range));
+        }
+
+        // Check if the symbol is a class method and add DocstringCodeLens
+        if (symbol.kind === SymbolKind.Method) {
             // console.log(`  Function found: ${JSON.stringify(symbol, null, 2)} | symbol.selectionrange: ${symbol.selectionrange} | symbol.selection_range: ${symbol.selection_range}`);
             lenses.push(new DocstringCodeLens(symbol.range, symbol.location.range));
         }

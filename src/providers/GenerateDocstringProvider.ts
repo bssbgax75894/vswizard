@@ -31,7 +31,7 @@ export async function GenerateDocstring(text: string, insertionLine: number, aut
 
     const additionalPostPromptText: string = `${langId === 'python'?"\n    ": ""}` + "# An elaborate, high quality docstring for the above function:" + `${langId === 'python'?"\n    ": ""}` + startDocstringToken;
     const additionalPrePromptText: string = "";
-    const engine: string | undefined = workspace.getConfiguration("doxide").get("openAI.engine");
+    const apiUrl: string = workspace.getConfiguration("vswizard").get("apiUrl") || "''";
 
     const docstringTemplateObj = template.find(x => x.lang === langId);
     const exampleBubbleSort = docstringTemplateObj?.exampleCode || '';
@@ -46,7 +46,7 @@ export async function GenerateDocstring(text: string, insertionLine: number, aut
     //  model's context length. davinci-codex supports 4096 tokens
     await axios
         .post(
-            `https://api.openai.com/v1/engines/${engine}/completions`,
+            `${apiUrl}`,
             {
                 prompt: prompt,
                 // suffix: "",
@@ -161,8 +161,9 @@ function countNumIndents(insertSpaces:boolean, tabSize:number, text:string): num
     let numIndents = 0;
     var spacesCounter = 0;
     if (match.length) {
-        for (let i=0; i < match[0].length; i++) {
-            let char = match[0][i];
+        var r = match[0] || [];
+        for (let i=0; i < r.length; i++) {
+            let char = r[i];
             if (char === '\t') {
                 numIndents += 1;
             } else if (char === ' ') {

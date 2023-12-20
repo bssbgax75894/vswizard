@@ -13,13 +13,27 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "vswizard" is now active!');
 
 	// Step1: generate client uid
+	const langId = vscode.window.activeTextEditor?.document.languageId;
+
 
 	// Step2: register code lens
 	const vswizardCodeLensProvider = new VswizardCodeLensProvider(); 
 	vscode.languages.registerCodeLensProvider("python", vswizardCodeLensProvider);
 
-
 	// Step3: register commands
+	vscode.commands.registerCommand("vswizard.enableCodeLens", async () => {
+		console.log("[Command] vswizard.enableCodeLens called.");
+		vscode.workspace.getConfiguration("vswizard").update("codeLens.enabled", true);
+		vscode.window.showInformationMessage(`Vswizard: CodeLens Enabled.`);
+	});
+
+	// Command to disable CodeLenses
+	vscode.commands.registerCommand("doxide.disableCodeLens", async () => {
+		console.log("[Command] doxide.disableCodeLens called.");
+		vscode.workspace.getConfiguration("doxide").update("codeLens.enabled", false);
+		vscode.window.showInformationMessage(`Doxide: CodeLens Disabled.`);
+	});
+	
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
 			"vswizard.generateDocstring",
@@ -52,23 +66,23 @@ export function activate(context: vscode.ExtensionContext) {
 		)
 	);
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"vswizard.generateFileHeader",
-			async () => {
+	// context.subscriptions.push(
+	// 	vscode.commands.registerCommand(
+	// 		"vswizard.generateFileHeader",
+	// 		async () => {
 
-			}
-		)
-	);
+	// 		}
+	// 	)
+	// );
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			"vswizard.generateCompletion",
-			async () => {
+	// context.subscriptions.push(
+	// 	vscode.commands.registerCommand(
+	// 		"vswizard.generateCompletion",
+	// 		async () => {
 
-			}
-		)
-	);
+	// 		}
+	// 	)
+	// );
 }
 
 // This method is called when your extension is deactivated
